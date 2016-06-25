@@ -5,6 +5,7 @@ These make good launcher buttons in your desktop environment.
 """
 import argparse
 import sys
+from xml.etree import ElementTree as etree
 
 import requests
 
@@ -15,10 +16,19 @@ SOURCES = {
     'sat': 'SAT/CBL',
 }
 VOLUME_COMMANDS = {
-    'mute': 'PutVolumeMute/TOGGLE',
-    '-': 'PutMasterVolumeBtn/<',
-    '+': 'PutMasterVolumeBtn/>',
+    'mute': lambda: 'PutVolumeMute/TOGGLE',
+    '-': lambda: 'PutMasterVolumeSet/' + str(status()['volume'] - 5),
+    '+': lambda: 'PutMasterVolumeSet/' + str(status()['volume'] + 5),
 }
+
+
+def status():
+    req = requests.get(HOST + '/goform/formMainZone_MainZoneXml.xml')
+    assert req.status_code == 200, req.status_code
+    tree = etree.fromstring(req.content)
+    return {
+        'volume': float(tree.find('.//MasterVolume').find('.//value').text),
+    }
 
 
 def update_main_zone(cmd0):
@@ -49,7 +59,7 @@ def main(argv=None):
         source = SOURCES[args.source]
         update_main_zone('PutZone_InputFunction/' + source)
     elif args.command == 'volume':
-        command = VOLUME_COMMANDS[args.direction]
+        command = VOLUME_COMMANDS[args.direction]()
         update_main_zone(command)
 
 
