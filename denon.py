@@ -4,6 +4,7 @@
 These make good launcher buttons in your desktop environment.
 """
 import argparse
+import json
 import sys
 from xml.etree import ElementTree as etree
 
@@ -53,6 +54,8 @@ def main(argv=None):
     parser_volume = subparsers.add_parser('volume', help='change volume')
     parser_volume.add_argument('direction', choices=sorted(VOLUME_COMMANDS.keys()))
 
+    parser_status = subparsers.add_parser('status', help='print status (as JSON)')
+
     args = parser.parse_args(argv)
 
     if args.command == 'source':
@@ -61,6 +64,11 @@ def main(argv=None):
     elif args.command == 'volume':
         command = VOLUME_COMMANDS[args.direction]()
         update_main_zone(command)
+    elif args.command == 'status':
+        s = status()
+        # volume as printed by the device is different than what it reports
+        s['volume'] += 80
+        print(json.dumps(s))
 
 
 if __name__ == '__main__':
