@@ -24,7 +24,7 @@ VOLUME_COMMANDS = {
 
 
 def status():
-    req = requests.get(HOST + '/goform/formMainZone_MainZoneXml.xml')
+    req = requests.get(HOST + '/goform/formMainZone_MainZoneXml.xml', timeout=2)
     assert req.status_code == 200, req.status_code
     tree = etree.fromstring(req.content)
     return {
@@ -40,6 +40,7 @@ def update_main_zone(cmd0):
             'cmd0': cmd0,
             'cmd1': 'aspMainZone_WebUpdateStatus/',
         },
+        timeout=2,
     )
     assert req.status_code == 200, req.status_code
 
