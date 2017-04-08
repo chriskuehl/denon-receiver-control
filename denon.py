@@ -11,7 +11,7 @@ from xml.etree import ElementTree as etree
 import requests
 
 
-HOST = 'http://192.168.1.11'
+HOST = 'http://denon'
 SOURCES = {
     'dvd': 'DVD',
     'sat': 'SAT/CBL',
