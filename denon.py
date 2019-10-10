@@ -16,6 +16,7 @@ HOST = 'http://denon'
 SOURCES = {
     'dvd': 'DVD',
     'sat': 'SAT/CBL',
+    'game': 'GAME',
 }
 VOLUME_COMMANDS = {
     'mute': lambda: 'PutVolumeMute/TOGGLE',
