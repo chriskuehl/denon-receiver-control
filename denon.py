@@ -31,6 +31,13 @@ def status():
     tree = etree.fromstring(req.content)
     return {
         'volume': float(tree.find('.//MasterVolume').find('.//value').text),
+
+        # Originally I tried to normalize this value back to the values from
+        # SOURCES, but this doesn't work very well: the receiver reports source
+        # names differently than what it expects as input. (E.g. it wants you
+        # to specify "SAT/CBL" when changing sources but it calls that same
+        # source "CBL/SAT" when it is selected...)
+        'source': tree.find('.//InputFuncSelect').find('.//value').text,
     }
 
 
